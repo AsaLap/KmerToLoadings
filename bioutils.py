@@ -25,12 +25,13 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
     :param title: str, graph title
     :param save: str, save path to save figure
     :param show: bool, show plot or not
-    :param method: the method of clustering, see scipy.cluster.hierarchy.linkage
-    :param metric: metric of clustering, see scipy.cluster.hierarchy.linkage
+    :param hue: list[dict, series], dictionary of color palette and series of correspondance between sample and color palette
+    :param hue_legend: str, title legend of the hue variables
     :param figsize: tuple of int, size of figure
     :param dpi: int, quality of image to save
-    :param hue: list[dict, series], dictionary of color palette and series of correspondance between sample and color palette
-    :return:
+    :param method: the method of clustering, see scipy.cluster.hierarchy.linkage
+    :param metric: metric of clustering, see scipy.cluster.hierarchy.linkage
+    :return: None
     """
     fig, ax = plt.subplots(figsize=figsize)
     linkage_data = linkage(data, method=method, metric=metric)
@@ -64,6 +65,28 @@ def extract_domaine(name):
 
 def extract_row(name):
     return name.split("_")[-2]
+
+def extract_type_chardonnay(name):
+    return extract_type(name, "python_chardonnay_no_vintage.csv")
+
+def extract_type_pinot(name):
+    return extract_type(name, "python_pinots_no_vintage.csv")
+
+def extract_type(name, file):
+    """Function to extract type from name
+    :param name: str, name of the line/accession
+    :param file: str, name of the file in which type information is stored
+    """
+    finesse_df = pd.read_csv(file)[["ID", "Line", "Finesse", "Type", "Degree_mean", "HL_Ha_mean"]]
+    id = name.split("_")[3]
+    try:
+        return finesse_df.loc[finesse_df['Line'] == id, 'Type'].iloc[0]
+    except IndexError:
+        if len(id.split("-")) == 1 or len(id.split("-")) == 2:
+            return "Clone"
+        else:
+            print("Name not found", name)
+            return "Unknown"
 
 
 def extraire_groupe_chenin(name):
