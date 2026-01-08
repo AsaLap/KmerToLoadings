@@ -18,7 +18,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 
-def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None, figsize=(10,5), dpi=150, method="ward", metric="euclidean"):
+def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None, figsize=(10,5), dpi=150, method="ward", metric="euclidean", **legend_kwargs):
     """
     Function to do and draw a clustering of lines
     :param data: pandas DataFrame, transposed dataframe with values to cluster
@@ -31,6 +31,7 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
     :param dpi: int, quality of image to save
     :param method: the method of clustering, see scipy.cluster.hierarchy.linkage
     :param metric: metric of clustering, see scipy.cluster.hierarchy.linkage
+    :param legend_kwargs: supplementary arguments for legend handling
     :return: None
     """
     fig, ax = plt.subplots(figsize=figsize)
@@ -47,7 +48,8 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
         for key in hue[0]:
             data_key = patches.Patch(color=hue[0][key], label=key)
             patchList.append(data_key)
-        plt.legend(handles=patchList, title=hue_legend)
+        plt.legend(handles=patchList, title=hue_legend, **legend_kwargs)
+    # plt.legend(loc='upper right', bbox_to_anchor=(1, 1))
     if save:
         plt.savefig(save+".png", dpi=dpi, bbox_inches='tight')
     if show:
@@ -88,6 +90,8 @@ def extract_type(name, file):
             print("Name not found", name)
             return "Unknown"
 
+def extract_planting(name):
+    return name.split("_")[1]
 
 def extraire_groupe_chenin(name):
     """Function to extract group from which Chenin comes from. Function by Gautier Sarah
