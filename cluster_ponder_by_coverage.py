@@ -6,7 +6,7 @@
 import argparse
 import pandas as pd
 
-parser = argparse.ArgumentParser(description='Ponder kmer count by coverage')
+parser = argparse.ArgumentParser(description='Ponder kmer count by overall genome coverage')
 parser.add_argument('--matrix', action="store", dest='matrix', required=True, help="Matrix of kmer frequencies, TSV file")
 parser.add_argument('--names', action="store", dest='names', required=True, help="Names of lines in same order as they are in the matrix, each name on a new line type file")
 parser.add_argument('--reads_count', action="store", dest='reads_count', required=True, help="Reads count value for each line (reverse and forward) with 'line_fr' and 'nb_reads' headers, TSV file")
@@ -35,7 +35,7 @@ print("nb_read", "\n", nb_reads)
 matrix_pondered = pd.DataFrame()
 for i in nb_reads.index:
     try:
-        matrix_pondered[i] = (matrix[i] / nb_reads.loc[i]["coverage"]).round(2)
+        matrix_pondered[i] = round(matrix[i] / nb_reads.loc[i]["coverage"], args.round)
     except KeyError:
         print("Key Error : ", i)
         pass
