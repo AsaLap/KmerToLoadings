@@ -1,12 +1,12 @@
 #!/bin/sh
 # Antoine Laporte 2025
 #SBATCH --job-name=ponder
-#SBATCH -N 1
-#SBATCH -n 1
-#SBATCH --mem=10000
-#SBATCH --ntasks-per-node=1
-#SBATCH --ntasks-per-core=1
-#SBATCH --partition=cpu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=10G
+#SBATCH --partition=cpu-dedicated
+#SBATCH --account=dedicated-cpu@cirad-normal
 #SBATCH -o logs/ponder."%j".out
 #SBATCH -e logs/ponder."%j".err
 

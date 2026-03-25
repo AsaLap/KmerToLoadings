@@ -1,15 +1,15 @@
 #!/bin/sh
 # Antoine Laporte 2025
 #SBATCH --job-name=KmerToLoadings
-#SBATCH -N 1
-#SBATCH -n 1
-#SBATCH --mem=10000
-#SBATCH --ntasks-per-node=1
-#SBATCH --ntasks-per-core=1
-#SBATCH --partition=cpu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --partition=cpu-dedicated
+#SBATCH --account=dedicated-cpu@cirad
 mkdir logs
-#SBATCH -o logs/Kmer."%j".out
-#SBATCH -e logs/Kmer."%j".err
+#SBATCH --output logs/Kmer."%j".out
+#SBATCH --error logs/Kmer."%j".err
 
 echo "Running on:$SLURM_NODELIST"
 echo "Starting date: $(date +%d/%m/%y-%HH%M)"
