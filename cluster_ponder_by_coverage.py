@@ -35,7 +35,7 @@ print("nb_read", "\n", nb_reads)
 matrix_pondered = pd.DataFrame()
 for i in nb_reads.index:
     try:
-        matrix_pondered[i] = round(matrix[i] / nb_reads.loc[i]["coverage"], args.round)
+        matrix_pondered[i] = round(matrix[i] / nb_reads.loc[i]["coverage"], int(args.round))
     except KeyError:
         print("Key Error : ", i)
         pass
