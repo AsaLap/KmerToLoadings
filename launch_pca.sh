@@ -14,7 +14,8 @@
 echo "Running on:$SLURM_NODELIST"
 
 module purge
-module load python/3.7.2
+module load bioinfo-cirad
+module load python/pacakges/3.8.2
 
 scripts_dir=$1
 matrix=$2

@@ -15,9 +15,6 @@ mkdir logs
 echo "Running on:$SLURM_NODELIST"
 echo "Starting date: $(date +%d/%m/%y-%HH%M)"
 
-#module purge
-#module load python/3.7.2
-
 # Loading parameters from config file
 scripts_dir=$(pwd)
 . "$scripts_dir"/run_parameters.config
