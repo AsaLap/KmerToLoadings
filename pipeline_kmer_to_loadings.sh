@@ -7,6 +7,7 @@
 #SBATCH --mem=1G
 #SBATCH --partition=cpu-dedicated
 #SBATCH --account=dedicated-cpu@cirad
+#SBATCH --time=00:10:00
 mkdir logs
 #SBATCH --output logs/Kmer."%j".out
 #SBATCH --error logs/Kmer."%j".err

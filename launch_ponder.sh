@@ -7,6 +7,7 @@
 #SBATCH --mem=10G
 #SBATCH --partition=cpu-dedicated
 #SBATCH --account=dedicated-cpu@cirad-normal
+#SBATCH --time=02:00:00
 #SBATCH -o logs/ponder."%j".out
 #SBATCH -e logs/ponder."%j".err
 
