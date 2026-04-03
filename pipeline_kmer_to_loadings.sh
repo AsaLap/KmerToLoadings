@@ -87,7 +87,7 @@ if $do_pondering;then
   printf "\n------PONDER------\n"
   echo "Pondering each submatrix by coverage values..."
   START_TIME=$(date +%s)
-  for matrix in "$directory_output"/*;
+  for matrix in $(ls "$directory_output"/* | grep -v pondered | grep -v pca);
   do
 #    echo "$matrix"
     sbatch "$scripts_dir"/launch_ponder.sh \
@@ -108,7 +108,7 @@ if "$do_levenshtein";then
   printf "\n------LEVENSHTEIN------\n"
   echo "Selecting kmer with Levenshtein process for each submatrix..."
   START_TIME=$(date +%s)
-  for matrix in "$directory_output"/*pondered.tsv;
+  for matrix in $(ls "$directory_output"/* | grep pondered | grep -v leven | grep -v pca);
   do
 #    echo "$matrix";
     sbatch "$scripts_dir"/launch_levenshtein.sh \
