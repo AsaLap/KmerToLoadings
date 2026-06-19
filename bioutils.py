@@ -8,7 +8,6 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import re
-import seaborn as sns
 from matplotlib import patches
 from scipy.stats import chisquare
 from scipy.cluster.hierarchy import dendrogram, linkage
@@ -450,6 +449,7 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     :param kwargs: parameters of seaborn.scatterplot
     :return: array of PCA explained variance
     """
+    import seaborn as sns
 
     plt.figure(figsize=figsize)
     sns.scatterplot(data=df_pca, x=axes[0], y=axes[1], **kwargs)
@@ -485,6 +485,8 @@ def pca_screeplot_seaborn(pca, save=None, show=True, figsize=(10,7), sum_var=0.8
     :param dpi: int - quality of image to save
     :return: none
     """
+    import seaborn as sns
+
     fig, ax = plt.subplots(figsize=figsize)
     pc_numbers = np.arange(pca.n_components_) + 1
     sns.barplot(x=pc_numbers, y=pca.explained_variance_ratio_, linewidth=2, color='#005b96', ax=ax)
