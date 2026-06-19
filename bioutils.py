@@ -18,7 +18,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 
-def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None, figsize=(10,5), dpi=150, method="ward", metric="euclidean", **kwargs):
+def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None, rotation=90, figsize=(10,5), dpi=150, method="ward", metric="euclidean", **kwargs):
     """
     Function to do and draw a clustering of lines
     :param data: pandas DataFrame, transposed dataframe with values to cluster
@@ -27,6 +27,7 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
     :param show: bool, show plot or not
     :param hue: list[dict, series], dictionary of color palette and series of correspondance between sample and color palette
     :param hue_legend: str, title legend of the hue variables
+    :param rotation: int, rotation of the x axis
     :param figsize: tuple of int, size of figure
     :param dpi: int, quality of image to save
     :param method: the method of clustering, see scipy.cluster.hierarchy.linkage
@@ -38,7 +39,7 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
     linkage_data = linkage(data, method=method, metric=metric)
     dendrogram(linkage_data, labels=data.index, ax=ax, **kwargs)
     plt.title(title)
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=rotation)
     if hue:
         for label in ax.get_xticklabels():
             text = label.get_text()
