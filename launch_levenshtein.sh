@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=20G
+#SBATCH --mem=50G
 #SBATCH --partition=cpu-dedicated
 #SBATCH --account=dedicated-cpu@cirad-normal
 #SBATCH --time=02:00:00
@@ -15,7 +15,7 @@ echo "Running on:$SLURM_NODELIST"
 
 module purge
 module load bioinfo-cirad
-module load python/packages/3.8.2
+module load python/packages/3.7.2
 
 scripts_dir=$1
 matrix=$2
