@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=10G
+#SBATCH --mem=50G
 #SBATCH --partition=cpu-dedicated
 #SBATCH --account=dedicated-cpu@cirad-normal
 #SBATCH --time=02:00:00
