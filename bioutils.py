@@ -56,7 +56,7 @@ def clustering(data, title=None, save=None, show=True, hue=None, hue_legend=None
         plt.show()
 
 
-def extract_domaine(name):
+def extract_domaine_bourgogne(name):
     first_split = name.split("_")
     second_split = first_split[-1].split("-")
     if len(second_split) == 1 or len(second_split) == 2:
@@ -64,6 +64,75 @@ def extract_domaine(name):
     else:
         return second_split[0]
 
+def extract_domaine_bordeaux(name):
+    split = name.split("_")
+    if len(split) == 2:
+        return 'Clone'
+    else:
+        if split[1] == "1":
+            return "Ausone"
+        if split[1] == "2":
+            return "Cheval Blanc"
+        if split[1] == "3":
+            return "Haut-Brion"
+        if split[1] == "4":
+            return "Lafite"
+        if split[1] == "5":
+            return "Latour"
+        if split[1] == "6":
+            return "Margaux"
+        if split[1] == "7":
+            return "Mouton"
+        if split[1] == "8":
+            return "Yquem"
+        else:
+           return split[1]
+
+def extract_info_bordeaux(list_name):
+    dico_bordeaux = {
+        "Ausone": [],
+        "Cheval Blanc": [],
+        "Haut-Brion": [],
+        "Lafite": [],
+        "Latour": [],
+        "Margaux": [],
+        "Mouton": [],
+        "Yquem": [],
+        "Clone":[],
+        "Unknown":[]}
+    for name in list_name:
+        split = name.split("_")
+        if len(split) == 2:
+            dico_bordeaux["Clone"].append(name)
+        else:
+            if split[1] == "1":
+                dico_bordeaux["Ausone"].append(name)
+            elif split[1] == "2":
+                dico_bordeaux["Cheval Blanc"].append(name)
+            elif split[1] == "3":
+                dico_bordeaux["Haut-Brion"].append(name)
+            elif split[1] == "4":
+                dico_bordeaux["Lafite"].append(name)
+            elif split[1] == "5":
+                dico_bordeaux["Latour"].append(name)
+            elif split[1] == "6":
+                dico_bordeaux["Margaux"].append(name)
+            elif split[1] == "7":
+                dico_bordeaux["Mouton"].append(name)
+            elif split[1] == "8":
+                dico_bordeaux["Yquem"].append(name)
+            else:
+               dico_bordeaux["Unknown"].append(name)
+    return dico_bordeaux
+
+# def extract_sol_mouton(name):
+#     if int(name.split()[4]) < 212:
+#         return "Marne"
+#     else:
+#         return "Graves"
+
+def extract_rang_bordeaux(name):
+    return int(name.split("_")[4])
 
 def extract_row(name):
     return name.split("_")[-2]
@@ -420,8 +489,9 @@ def pca_loadings_selection(pca_data, index, nb_loadings=50):
     loadings = pd.DataFrame(pca_data.components_.T * np.sqrt(pca_data.explained_variance_.T),
                             index=index,
                             columns=[i + 1 for i in range(len(pca_data.explained_variance_.T))])
-    #NOTE: "first" is used because if values are the same, it takes them all. Here, at 38, PC2 are all the same values,
-    #making a non-homologous df that causes an error when transposing.
+    # NOTE: "first" is used because if values are the same, it takes them all instead of stoping at wanted number of loadings.
+    # First takes the first (number of loadings wanted) and then stops. Here, at 38, all PC2 loadings have the same values,
+    # making a non-homologous df that causes an error when transposing if I don't specify "only" the first 50 values.
     highest_loadings = pd.DataFrame(np.array([loadings[c].nlargest(nb_loadings, keep='first').index.values for c in loadings]).T)
     highest_loadings.columns = ["PC" + str(i + 1) for i in highest_loadings.columns.values.tolist()]
     lowest_loadings = pd.DataFrame(np.array([loadings[c].nsmallest(nb_loadings, keep='first').index.values for c in loadings]).T)
@@ -452,6 +522,8 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     import seaborn as sns
 
     plt.figure(figsize=figsize)
+    plt.axvline(x=0, linestyle='--', color='grey', alpha=0.5)
+    plt.axhline(y=0, linestyle='--', color='grey', alpha=0.5)
     sns.scatterplot(data=df_pca, x=axes[0], y=axes[1], **kwargs)
 
     if text_label:
