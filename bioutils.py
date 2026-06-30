@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import adjustText
 # Antoine Laporte - 2025
 
 import matplotlib.pyplot as plt
@@ -503,7 +503,7 @@ def pca_loadings_selection(pca_data, index, nb_loadings=50):
 
 
 def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_legend=None, show=True, axes=("PC1", "PC2"),
-                            figsize=(10, 7), dpi=150, text_label=True, **kwargs):
+                            figsize=(10, 7), dpi=150, text_label=True, list_label=None, adjusted=False, **kwargs):
     """
     Function to draw a PCA scatterplot using seaborn scatterplot.
     :param df_pca: pandas dataframe containing PCA data
@@ -516,6 +516,8 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     :param figsize: list of tuple = (10,7)
     :param dpi: int - quality of image to save
     :param text_label: str - show labels or not on the plot
+    :param list_label: list of str - list of labels to show (in red)
+    :param adjusted:
     :param kwargs: parameters of seaborn.scatterplot
     :return: array of PCA explained variance
     """
@@ -526,9 +528,30 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     plt.axhline(y=0, linestyle='--', color='grey', alpha=0.5)
     sns.scatterplot(data=df_pca, x=axes[0], y=axes[1], **kwargs)
 
-    if text_label:
+
+    highlighted_texts = []
+    highlighted_lines = []
+    if list_label:
         for i, row in df_pca.iterrows():
-            plt.text(row[axes[0]] + 0.2, row[axes[1]], i, fontsize=8)
+            if i in list_label:
+                highlighted_lines.append(i)
+                highlighted_texts.append(plt.text(row[axes[0]] + 0.2, row[axes[1]], i, fontsize=10, color='red', weight='bold'))
+        if adjusted:
+            adjust.adjust_text(highlighted_texts, expand=(1.2, 1.5),
+                               arrowprops=dict(arrowstyle='->', color='red'),
+                               prevent_crossings=True,
+                               force_text=0.1)
+    if text_label:
+        texts = []
+        for i, row in df_pca.iterrows():
+            if i not in highlighted_lines:
+                texts.append(plt.text(row[axes[0]] + 0.2, row[axes[1]], i, fontsize=5, alpha=0.4))
+        if adjusted:
+            adjust.adjust_text(texts, expand=(1.5, 1.5),
+                               arrowprops=dict(arrowstyle='->', color='grey', alpha=0.2),
+                               prevent_crossings=True,
+                               force_text=(2,2))
+
     plt.xlabel(
         f"{axes[0]} ({pca_pipeline[1].explained_variance_ratio_[int(axes[0][2]) - 1] * 100:.1f} %)")  # pca_pipeline[1] = pca
     plt.ylabel(
