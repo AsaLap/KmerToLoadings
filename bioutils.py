@@ -522,6 +522,7 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     :return: array of PCA explained variance
     """
     import seaborn as sns
+    import adjustText as adjust
 
     plt.figure(figsize=figsize)
     plt.axvline(x=0, linestyle='--', color='grey', alpha=0.5)
