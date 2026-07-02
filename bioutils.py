@@ -503,7 +503,7 @@ def pca_loadings_selection(pca_data, index, nb_loadings=50):
 
 
 def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_legend=None, show=True, axes=("PC1", "PC2"),
-                            figsize=(10, 7), dpi=150, text_label=True, list_label=None, adjusted=False, **kwargs):
+                            figsize=(10, 7), dpi=150, label_text=True, label_column=None, label_list=None, adjusted=False, **kwargs):
     """
     Function to draw a PCA scatterplot using seaborn scatterplot.
     :param df_pca: pandas dataframe containing PCA data
@@ -515,8 +515,9 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
     :param axes: tuple of PCA axes = ("PC1","PC2")
     :param figsize: list of tuple = (10,7)
     :param dpi: int - quality of image to save
-    :param text_label: str - show labels or not on the plot
-    :param list_label: list of str - list of labels to show (in red)
+    :param label_text: str - show labels or not on the plot
+    :param label_column: str - column to use for labelling the dots
+    :param label_list: list of str - list of labels to show (in red). Must be found in label_column if used or index if not.
     :param adjusted:
     :param kwargs: parameters of seaborn.scatterplot
     :return: array of PCA explained variance
@@ -531,22 +532,33 @@ def pca_scatterplot_seaborn(df_pca, pca_pipeline, save=None, title=None, hue_leg
 
 
     highlighted_texts = []
-    highlighted_lines = []
-    if list_label:
+    highlighted_labels = []
+    if label_list:
+        # try:
         for i, row in df_pca.iterrows():
-            if i in list_label:
-                highlighted_lines.append(i)
-                highlighted_texts.append(plt.text(row[axes[0]] + 0.2, row[axes[1]], i, fontsize=10, color='red', weight='bold'))
+            if label_column:
+                label = df_pca.loc[i, label_column] # getting the value of given column at i index in the loop
+            else:
+                label = i
+            if label in label_list:
+                highlighted_labels.append(label)
+                highlighted_texts.append(plt.text(x=row[axes[0]] + 0.2, y=row[axes[1]], s=label, fontsize=10, color='red', weight='bold'))
+        if len(highlighted_labels) == 0:
+            print("! Warning ! No given label found, are you sure they are in the [label_column] or index you are searching in?")
         if adjusted:
             adjust.adjust_text(highlighted_texts, expand=(1.2, 1.5),
                                arrowprops=dict(arrowstyle='->', color='red'),
                                prevent_crossings=True,
                                force_text=0.1)
-    if text_label:
+    if label_text:
         texts = []
         for i, row in df_pca.iterrows():
-            if i not in highlighted_lines:
-                texts.append(plt.text(row[axes[0]] + 0.2, row[axes[1]], i, fontsize=5, alpha=0.4))
+            if label_column:
+                label = df_pca.loc[i, label_column]
+            else:
+                label = i
+            if label not in highlighted_labels:
+                texts.append(plt.text(x=row[axes[0]] + 0.2, y=row[axes[1]], s=label, fontsize=5, alpha=0.4))
         if adjusted:
             adjust.adjust_text(texts, expand=(1.5, 1.5),
                                arrowprops=dict(arrowstyle='->', color='grey', alpha=0.2),
